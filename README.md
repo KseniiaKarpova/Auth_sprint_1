@@ -1,3 +1,9 @@
+# Схемы и ТЗ:
+1. [Auth_sprint_1.drawio](https://drive.google.com/file/d/12AntGAq1lJSE7KKA0LuQ6QxiADTEspA7/view?usp=sharing)
+2. [Требования. Auth_sprint_1](https://docs.google.com/spreadsheets/d/1hftmI8ORoq7WAGe7anUckMFR7Ojjj0UHMK_bcbC1TpM/edit?usp=sharing)
+
+
+
 # Проектная работа 6 спринта
 
 С этого модуля вы больше не будете получать чётко расписанное ТЗ, а задания для каждого спринта вы найдёте внутри уроков. Перед тем как начать программировать, вам предстоит продумать архитектуру решения, декомпозировать задачи и распределить их между командой.
