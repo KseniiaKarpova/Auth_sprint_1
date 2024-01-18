@@ -1,5 +1,5 @@
 from logging import config as logging_config
-from core.logger import LOGGING
+from src.core.logger import LOGGING
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from dotenv import load_dotenv
 
