@@ -1,6 +1,11 @@
+import uuid
+
 from sqlalchemy import MetaData
-from sqlalchemy.orm import DeclarativeBase
 from sqlalchemy.ext.asyncio import AsyncAttrs
+from sqlalchemy.orm import (DeclarativeBase,
+                            Mapped,
+                            mapped_column)
+
 
 metadata = MetaData()
 
@@ -9,8 +14,20 @@ class Base(AsyncAttrs, DeclarativeBase):
     metadata = metadata
 
 
-class SomeClass(Base):
-    pass
+class User(Base):
+    __tablename__ = 'users'
+
+    uuid = Mapped[uuid.UUID] = mapped_column(default=uuid.uuid4(),
+                                             primary_key=True)
+    login = Mapped[str] = mapped_column(nullable=False, unique=True)
+    email = Mapped[str] = mapped_column(nullable=False, unique=True)
+    password = Mapped[str] = mapped_column(nullable=False)
+    name = Mapped[str] = mapped_column(nullable=True)
+    surname = Mapped[str] = mapped_column(nullable=True)
+
+
+
+
 
 
 """
