@@ -25,10 +25,13 @@ class User(Base):
     password: Mapped[str] = mapped_column(nullable=False)
     name: Mapped[str] = mapped_column(nullable=True)
     surname: Mapped[str] = mapped_column(nullable=True)
+    is_active: Mapped[bool] = mapped_column(default=True)    # instead deleting user, change this field
     user_role: Mapped['UserRole'] = relationship(back_populates='users',
                                                  cascade='all, delete',
                                                  passive_deletes=True)
-
+    user_history: Mapped['UserHistory'] = relationship(back_populates='user_history',
+                                                       cascade='all, delete',
+                                                       passive_deletes=True)
 
 class Role(Base):
     __tablename__ = 'roles'
@@ -55,6 +58,25 @@ class UserRole(Base):
                                                nullable=False)
     user: Mapped['User'] = relationship(back_populates='users_roles')
     role: Mapped['Role'] = relationship(back_populates='users_roles')
+
+
+class UserHistory(Base):
+    __tablename__ = 'user_history'
+
+    uuid: Mapped[uuid.UUID] = mapped_column(types.UUID,
+                                            default=uuid.uuid4,
+                                            primary_key=True)
+
+    user_id: Mapped[uuid.UUID] = mapped_column(ForeignKey('users.uuid'),
+                                               onupdate='CASCADE',
+                                               ondelete='CASCADE',
+                                               nullable=False)
+
+    user_agent: Mapped[str] = mapped_column(nullable=True)
+    refresh_token: Mapped[str] = mapped_column(nullable=True)
+    is_active: Mapped[bool] = mapped_column(default=True)
+    user: Mapped['User'] = relationship(back_populates='user_history')
+
 
 
 
