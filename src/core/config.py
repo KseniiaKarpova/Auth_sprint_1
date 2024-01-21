@@ -18,11 +18,20 @@ class PostgresDbSettings(BaseSettings):
     model_config = SettingsConfigDict(env_prefix='postgres_')
 
 
+class RedisSettings(BaseSettings):
+    host: str = ...
+    port: int = ...
+
+    model_config = SettingsConfigDict(env_prefix='redis_')
+
+
 class APPSettings(BaseSettings):
     project_name: str = 'Auth API'
 
     db: PostgresDbSettings = PostgresDbSettings()
     db_dsn: str = f'postgresql+asyncpg://{db.user}:{db.password}@{db.host}:{db.port}/{db.db}'
+
+    redis: RedisSettings = RedisSettings()
 
 
 settings = APPSettings()
