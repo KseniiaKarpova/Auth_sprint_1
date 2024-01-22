@@ -1,12 +1,9 @@
 import uuid
 
+from sqlalchemy import ForeignKey, MetaData, types
 from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy import MetaData, types, ForeignKey
 from sqlalchemy.ext.asyncio import AsyncAttrs
-from sqlalchemy.orm import (DeclarativeBase,
-                            Mapped,
-                            mapped_column,
-                            relationship)
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 
 metadata = MetaData()
 

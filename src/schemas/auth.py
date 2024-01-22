@@ -1,0 +1,24 @@
+from datetime import timedelta
+
+from pydantic import BaseModel, Field
+
+from core.config import settings
+
+
+class UserLogin(BaseModel):
+    login: str
+    password: str
+
+
+class AuthSettingsSchema(BaseModel):
+    authjwt_secret_key: str = settings.auth.secret_key
+    authjwt_denylist_enabled: bool = True
+    authjwt_denylist_token_checks: set = {"access", "refresh"}
+    authjwt_algorithm: str = "HS256"
+    access_expires: int = timedelta(minutes=15)
+    refresh_expires: int = timedelta(days=30)
+
+
+class LoginResponseSchema(BaseModel):
+    access_token: str = Field(description='Access token value')
+    refresh_token: str = Field(description='Refresh token value')
