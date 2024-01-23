@@ -27,18 +27,12 @@ async def login(
         user_credentials: UserLogin,
         Authorize: AuthJWT = Depends(),
         service : AuthService = Depends(get_auth_service)):
-    user = await service.login(data=user_credentials)
-    access_token = await Authorize.create_access_token(
-        subject=user.login, fresh=True
-    )
-    refresh_token = await Authorize.create_refresh_token(subject=user.login)
-    return {"access_token": access_token, "refresh_token": refresh_token}
+    return await service.login(data=user_credentials, auth_jwt=Authorize)
 
 
 @router.post("/refresh")
 async def refresh(Authorize: AuthJWT = Depends()):
     await Authorize.jwt_refresh_token_required()
-
     current_user = await Authorize.get_jwt_subject()
     new_access_token = await Authorize.create_access_token(subject=current_user)
     return {"access_token": new_access_token}
