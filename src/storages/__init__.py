@@ -10,7 +10,7 @@ class AlchemyBaseStorage(ABC):
     def __init__(self, session: AsyncSession = None) -> None:
         self.session = session
 
-    async def generate_query(self, attributes: list[str], conditions: dict) -> table:
+    async def generate_query(self, conditions: dict, attributes: list[str] = None) -> table:
         where_condition = and_(*[getattr(self.table, field) == value for field, value in conditions.items()])
         attributes = [getattr(self.table, field) for field in attributes] if attributes else self.table
         return select(attributes).where(where_condition)
@@ -19,7 +19,7 @@ class AlchemyBaseStorage(ABC):
         async with self.session:
             query = await self.generate_query(attributes=attributes, conditions=conditions)
             instance = (await self.session.execute(query)).scalar()
-            return bool(instance)
+        return bool(instance)
 
     async def get(self, conditions: dict, attributes: dict = None) -> table:
         """
@@ -28,7 +28,7 @@ class AlchemyBaseStorage(ABC):
         async with self.session:
             query = await self.generate_query(attributes=attributes, conditions=conditions)
             instance = (await self.session.execute(query)).scalar()
-            return instance
+        return instance
     
     async def get_many(self, conditions: dict, attributes: dict = None) -> list[table]:
         """

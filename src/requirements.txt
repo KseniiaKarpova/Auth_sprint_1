@@ -23,3 +23,4 @@ async-fastapi-jwt-auth==0.6.1
 gunicorn==20.1.0
 redis==5.0.1
 orjson==3.9.10
+passlib==1.7.4

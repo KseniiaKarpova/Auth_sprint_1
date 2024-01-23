@@ -1,13 +1,20 @@
 from datetime import timedelta
-
+from fastapi import Form
 from pydantic import BaseModel, Field
 
 from core.config import settings
 
 
+class UserCredentials(BaseModel):
+    login: str = Form(...)
+    password: str = Form(...)
+    email: str = Form(...)
+
+
 class UserLogin(BaseModel):
-    login: str
-    password: str
+    login: str = Form(...)
+    password: str = Form(...)
+    agent: str = Form(...)
 
 
 class AuthSettingsSchema(BaseModel):
