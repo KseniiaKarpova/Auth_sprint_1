@@ -1,7 +1,9 @@
 from logging import config as logging_config
-from core.logger import LOGGING
-from pydantic_settings import BaseSettings, SettingsConfigDict
+
 from dotenv import load_dotenv
+from pydantic_settings import BaseSettings, SettingsConfigDict
+
+from core.logger import LOGGING
 
 load_dotenv()
 
@@ -25,6 +27,17 @@ class RedisSettings(BaseSettings):
     model_config = SettingsConfigDict(env_prefix='redis_')
 
 
+class AuthSettings(BaseSettings):
+    secret_key: str = ...
+    jwt_algorithm: str = ...
+    model_config: str = SettingsConfigDict(env_prefix='auth_')
+
+
+class HasherSettings(BaseSettings):
+    algorithm: str = ...
+    rounds: int = ...
+    model_config: str = SettingsConfigDict(env_prefix='hasher_')
+
 class APPSettings(BaseSettings):
     project_name: str = 'Auth API'
 
@@ -32,6 +45,8 @@ class APPSettings(BaseSettings):
     db_dsn: str = f'postgresql+asyncpg://{db.user}:{db.password}@{db.host}:{db.port}/{db.db}'
 
     redis: RedisSettings = RedisSettings()
+    auth: AuthSettings = AuthSettings()
+    hasher: HasherSettings = HasherSettings()
 
 
 settings = APPSettings()

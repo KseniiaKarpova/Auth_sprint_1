@@ -20,6 +20,26 @@ services:
     volumes:
       - redis_data:/data
 
+  auth_api:
+    container_name: AuthAPI
+    command: gunicorn main:app --worker-class uvicorn.workers.UvicornWorker --bind 0.0.0.0:9999
+    env_file:
+      - .env
+    environment:
+      PYTHONPATH: /src
+    volumes:
+      - ./src:/src
+    build:
+      context: src
+      dockerfile: Dockerfile
+    depends_on:
+      postgres_db:
+        condition: service_started
+      redis:
+        condition: service_started
+    ports:
+      - "9999:9999"
+
 volumes:
   pg_data:
   redis_data:
