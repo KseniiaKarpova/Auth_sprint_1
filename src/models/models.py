@@ -39,9 +39,7 @@ class Role(Base):
                                        default=uuid.uuid4,
                                        primary_key=True)
     name: Mapped[str] = mapped_column(nullable=False, unique=True)
-    user_role: Mapped['UserRole'] = relationship(back_populates='users',
-                                                 cascade='all, delete',
-                                                 passive_deletes=True)
+
 
     def __init__(self, name: str) -> None:
         self.name = name
