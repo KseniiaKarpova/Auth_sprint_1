@@ -42,10 +42,7 @@ class Role(Base):
     user_roles: Mapped['UserRole'] = relationship(back_populates="role",
                               cascade="all, delete",
                               passive_deletes=True, )
-
-    def __init__(self, name: str) -> None:
-        self.name = name
-
+      
 
 class UserRole(Base):
     __tablename__ = 'users_roles'
