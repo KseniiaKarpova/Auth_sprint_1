@@ -33,6 +33,11 @@ class AuthSettings(BaseSettings):
     model_config: str = SettingsConfigDict(env_prefix='auth_')
 
 
+class HasherSettings(BaseSettings):
+    algorithm: str = ...
+    rounds: int = ...
+    model_config: str = SettingsConfigDict(env_prefix='hasher_')
+
 class APPSettings(BaseSettings):
     project_name: str = 'Auth API'
 
@@ -41,6 +46,7 @@ class APPSettings(BaseSettings):
 
     redis: RedisSettings = RedisSettings()
     auth: AuthSettings = AuthSettings()
+    hasher: HasherSettings = HasherSettings()
 
 
 settings = APPSettings()
