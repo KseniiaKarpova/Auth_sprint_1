@@ -24,10 +24,10 @@ class User(Base):
     name: Mapped[str] = mapped_column(nullable=True)
     surname: Mapped[str] = mapped_column(nullable=True)
     is_active: Mapped[bool] = mapped_column(default=True)  # instead deleting user, change this field
-    user_role: Mapped['UserRole'] = relationship(back_populates='users',
+    users_roles: Mapped['UserRole'] = relationship(back_populates='users',
                                                  cascade='all, delete',
                                                  passive_deletes=True)
-    user_history: Mapped['UserHistory'] = relationship(back_populates='user_history',
+    user_history: Mapped['UserHistory'] = relationship(back_populates='user',
                                                        cascade='all, delete',
                                                        passive_deletes=True)
 
@@ -39,7 +39,9 @@ class Role(Base):
                                        default=uuid.uuid4,
                                        primary_key=True)
     name: Mapped[str] = mapped_column(nullable=False, unique=True)
-
+    users_roles: Mapped['UserRole'] = relationship(back_populates='role',
+                                                       cascade='all, delete',
+                                                       passive_deletes=True)
 
 class UserRole(Base):
     __tablename__ = 'users_roles'
@@ -53,7 +55,7 @@ class UserRole(Base):
     role_id: Mapped[UUID] = mapped_column(ForeignKey('roles.uuid'),
                                           onupdate='CASCADE',
                                           nullable=False)
-    user: Mapped['User'] = relationship(back_populates='users_roles')
+    users: Mapped['User'] = relationship(back_populates='users_roles')
     role: Mapped['Role'] = relationship(back_populates='users_roles')
 
 

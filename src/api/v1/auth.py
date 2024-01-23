@@ -3,8 +3,8 @@ from fastapi import APIRouter, Depends, Header
 from redis.asyncio import Redis
 
 from db.redis import get_redis
-from exceptions import unauthorized
-from schemas.auth import AuthSettingsSchema, LoginResponseSchema, UserLogin
+from schemas.auth import AuthSettingsSchema, LoginResponseSchema, UserCredentials, UserLogin
+from services.auth import get_auth_service, AuthService
 
 router = APIRouter()
 
@@ -23,10 +23,11 @@ async def check_if_token_in_denylist(decrypted_token):
 
 
 @router.post("/login", response_model=LoginResponseSchema)
-async def login(user: UserLogin, Authorize: AuthJWT = Depends()):
-    if user.login != "test" or user.password != "test":
-        raise unauthorized
-
+async def login(
+        user_credentials: UserLogin,
+        Authorize: AuthJWT = Depends(),
+        service : AuthService = Depends(get_auth_service)):
+    user = await service.login(data=user_credentials)
     access_token = await Authorize.create_access_token(
         subject=user.login, fresh=True
     )
@@ -53,3 +54,8 @@ async def logout(
     if refresh_token:
         await redis.setex(refresh_token, AuthSettingsSchema().refresh_expires, "true")
     return {"detail": "User successfully logged out"}
+
+
+@router.post("/registration")
+async def registration(user_credentials: UserCredentials, service: AuthService = Depends(get_auth_service)):
+    return await service.registrate(data=user_credentials)

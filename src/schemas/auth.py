@@ -5,6 +5,12 @@ from pydantic import BaseModel, Field
 from core.config import settings
 
 
+class UserCredentials(BaseModel):
+    login: str
+    password: str
+    email: str
+
+
 class UserLogin(BaseModel):
     login: str
     password: str
