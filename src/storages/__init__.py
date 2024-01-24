@@ -1,7 +1,7 @@
 from abc import abstractmethod, ABC
 from uuid import UUID
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select, and_, select, and_
+from sqlalchemy import select, and_, delete, update
 
 
 class AlchemyBaseStorage(ABC):
@@ -46,5 +46,27 @@ class AlchemyBaseStorage(ABC):
         async with self.session:
             instance = self.table(**params)
             self.session.add(instance)
+            await self.session.commit()
+        return instance
+
+    async def delete(self, conditions: dict):
+        """
+        DELETE FROM self.table WHERE conditions
+        """
+        async with self.session:
+            where_condition = and_(*[getattr(self.table, field) == value for field, value in conditions.items()])
+            query = delete(self.table).where(where_condition)
+            instance = await self.session.execute(query)
+            await self.session.commit()
+        return instance
+
+    async def update(self, conditions: dict, values: dict):
+        """
+        UPDATE values.keys() SET values FROM self.table WHERE conditions
+        """
+        async with self.session:
+            where_condition = and_(*[getattr(self.table, field) == value for field, value in conditions.items()])
+            query = update(self.table).where(where_condition).values(values)
+            instance = await self.session.execute(query)
             await self.session.commit()
         return instance
