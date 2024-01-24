@@ -1,11 +1,12 @@
 from passlib import hash
+
 from core.config import settings
 
 
 class DataHasher:
     def __init__(self) -> None:
         self.algorithm = settings.hasher.algorithm
-        self.rounds = settings.hasher.rounds 
+        self.rounds = settings.hasher.rounds
 
     async def generate_word_hash(self, secret_word: str):
         hasher = await self.get_hasher()

@@ -1,10 +1,13 @@
 from functools import lru_cache
+
 from fastapi import Depends
+from sqlalchemy.exc import IntegrityError
+
+from exceptions import (crud_not_found, role_already_exist_error,
+                        role_not_found, server_error)
 from services import AbstractCrudService
 from storages.role import Roletorage, get_role_storage
 from storages.user_role import UserRoleStorage, get_user_role_storage
-from sqlalchemy.exc import IntegrityError
-from exceptions import role_already_exist_error, server_error, role_not_found, crud_not_found
 
 
 class CrudService(AbstractCrudService):

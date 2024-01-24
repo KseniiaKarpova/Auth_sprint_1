@@ -1,7 +1,8 @@
-from services.crud import CrudService, get_crud_service
-from fastapi import APIRouter, Depends, status
-from exceptions import role_already_exist_error, role_not_found, crud_not_found
+from fastapi import APIRouter, Depends, Query, status
 
+from exceptions import crud_not_found, role_already_exist_error, role_not_found
+from models.models import Role
+from services.crud import CrudService, get_crud_service
 
 router = APIRouter()
 
@@ -30,7 +31,7 @@ async def create_role(
 )
 async def delete_role(
         service: CrudService = Depends(get_crud_service),
-        type: str | None = None,
+        type: str = Query(Role.get_colums()[0], enum=Role.get_colums()),
         value: str | None = None,
 ):
     result = await service.delete_role(type, value)
@@ -71,6 +72,7 @@ async def show_role(
     if result is None:
         raise role_not_found
     return result
+
 
 @router.patch(
     "/user/",

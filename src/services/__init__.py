@@ -5,6 +5,7 @@ from typing import Any
 class BaseService(ABC):
     pass
 
+
 class AbstractCrudService(ABC):
     """
         CRUD для управления ролями:

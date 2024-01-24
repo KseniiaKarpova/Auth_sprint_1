@@ -40,9 +40,13 @@ class Role(Base):
                                        primary_key=True)
     name: Mapped[str] = mapped_column(nullable=False, unique=True)
     user_roles: Mapped['UserRole'] = relationship(back_populates="role",
-                              cascade="all, delete",
-                              passive_deletes=True, )
-      
+                                                  cascade="all, delete",
+                                                  passive_deletes=True, )
+
+    @staticmethod
+    def get_colums():
+        return ['uuid', 'name']
+
 
 class UserRole(Base):
     __tablename__ = 'users_roles'
