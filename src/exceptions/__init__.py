@@ -12,3 +12,4 @@ role_user_already_exist_error = HTTPException(status_code=status.HTTP_403_FORBID
 crud_not_found = HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Can`t create rules")
 
 server_error = HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Sorry...")
+forbidden_error = HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="You have been denied access")

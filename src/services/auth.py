@@ -30,6 +30,13 @@ class AuthService(BaseService):
         })
         return DataHasher().verify(secret_word=UserLogin.password, hashed_word=user.password)
 
+    async def is_super_user(self, login):
+        status = await self.storage.exists(conditions={
+            'login': login,
+            'is_superuser': True
+        })
+        return status
+
 
 @lru_cache()
 def get_auth_service(
