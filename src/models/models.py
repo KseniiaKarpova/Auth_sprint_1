@@ -4,6 +4,7 @@ from sqlalchemy import ForeignKey, MetaData, types
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.ext.asyncio import AsyncAttrs
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
+from typing import List
 
 metadata = MetaData()
 
@@ -24,12 +25,13 @@ class User(Base):
     name: Mapped[str] = mapped_column(nullable=True)
     surname: Mapped[str] = mapped_column(nullable=True)
     is_active: Mapped[bool] = mapped_column(default=True)  # instead deleting user, change this field
-    user_role: Mapped['UserRole'] = relationship(back_populates='user',
-                                                 cascade='all, delete',
-                                                 passive_deletes=True)
-    user_history: Mapped['UserHistory'] = relationship(back_populates='user',
+    is_superuser: Mapped[bool] = mapped_column(default=False)
+    user_role: Mapped[List['UserRole']] = relationship(back_populates='user',
                                                        cascade='all, delete',
                                                        passive_deletes=True)
+    user_history: Mapped[List['UserHistory']] = relationship(back_populates='user',
+                                                             cascade='all, delete',
+                                                             passive_deletes=True)
 
 
 class Role(Base):
@@ -39,13 +41,9 @@ class Role(Base):
                                        default=uuid.uuid4,
                                        primary_key=True)
     name: Mapped[str] = mapped_column(nullable=False, unique=True)
-    user_roles: Mapped['UserRole'] = relationship(back_populates="role",
-                                                  cascade="all, delete",
-                                                  passive_deletes=True, )
-
-    @staticmethod
-    def get_colums():
-        return ['uuid', 'name']
+    user_roles: Mapped[List['UserRole']] = relationship(back_populates="role",
+                                                        cascade="all, delete",
+                                                        passive_deletes=True, )
 
 
 class UserRole(Base):
