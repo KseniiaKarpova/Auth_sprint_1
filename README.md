@@ -3,6 +3,11 @@
 2. [Требования. Auth_sprint_1](https://docs.google.com/spreadsheets/d/1hftmI8ORoq7WAGe7anUckMFR7Ojjj0UHMK_bcbC1TpM/edit?usp=sharing)
 
 
+# Создание Супер Пользователя:
+```commandline
+ docker exec AuthAPI python cli_create_super_user.py [login] [password]
+```
+
 
 # Проектная работа 6 спринта
 
