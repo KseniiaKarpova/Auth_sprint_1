@@ -4,6 +4,7 @@ from sqlalchemy import ForeignKey, MetaData, types
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.ext.asyncio import AsyncAttrs
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
+from typing import List
 
 metadata = MetaData()
 
@@ -24,10 +25,10 @@ class User(Base):
     name: Mapped[str] = mapped_column(nullable=True)
     surname: Mapped[str] = mapped_column(nullable=True)
     is_active: Mapped[bool] = mapped_column(default=True)  # instead deleting user, change this field
-    user_role: Mapped['UserRole'] = relationship(back_populates='user',
+    user_role: Mapped['UserRole'] = relationship(back_populates='users',
                                                  cascade='all, delete',
                                                  passive_deletes=True)
-    user_history: Mapped['UserHistory'] = relationship(back_populates='user',
+    user_history: Mapped['UserHistory'] = relationship(back_populates='user_history',
                                                        cascade='all, delete',
                                                        passive_deletes=True)
 
@@ -39,9 +40,7 @@ class Role(Base):
                                        default=uuid.uuid4,
                                        primary_key=True)
     name: Mapped[str] = mapped_column(nullable=False, unique=True)
-    user_roles: Mapped['UserRole'] = relationship(back_populates='role',
-                                                       cascade='all, delete',
-                                                       passive_deletes=True)
+
 
 class UserRole(Base):
     __tablename__ = 'users_roles'
