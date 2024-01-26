@@ -6,15 +6,15 @@ from core.config import settings
 
 
 class UserCredentials(BaseModel):
-    login: str = Form(...)
-    password: str = Form(...)
-    email: str = Form(...)
+    login: str
+    password: str
+    email: str
 
 
 class UserLogin(BaseModel):
-    login: str = Form(...)
-    password: str = Form(...)
-    agent: str = Form(...)
+    login: str
+    password: str
+    agent: str
 
 
 class AuthSettingsSchema(BaseModel):

@@ -1,5 +1,5 @@
 from async_fastapi_jwt_auth import AuthJWT
-from fastapi import APIRouter, Depends, Header
+from fastapi import APIRouter, Depends, Header, Form
 from redis.asyncio import Redis
 
 from db.redis import get_redis
@@ -24,7 +24,7 @@ async def check_if_token_in_denylist(decrypted_token):
 
 @router.post("/login", response_model=LoginResponseSchema)
 async def login(
-        user_credentials: UserLogin,
+        user_credentials: UserLogin = Form(),
         Authorize: AuthJWT = Depends(),
         service : AuthService = Depends(get_auth_service)):
     return await service.login(data=user_credentials, auth_jwt=Authorize)
