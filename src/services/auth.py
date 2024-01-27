@@ -1,17 +1,19 @@
 from functools import lru_cache
+
 from fastapi import Depends
+from sqlalchemy.exc import IntegrityError
+
+from core.hasher import DataHasher
+from exceptions import user_exists
+from schemas.auth import UserLogin
 from services import BaseService
 from storages.user import UserStorage, get_user_storage
-from schemas.auth import UserLogin
-from exceptions import user_exists
-from core.hasher import DataHasher
-from sqlalchemy.exc import IntegrityError
 
 
 class AuthService(BaseService):
     def __init__(self, storage: UserStorage):
         self.storage = storage
-    
+
     async def registrate(self, data: UserLogin):
         try:
             hashed_password = DataHasher().generate_word_hash(secret_word=data.password)
@@ -21,12 +23,19 @@ class AuthService(BaseService):
             })
         except IntegrityError:
             raise user_exists
-        
+
     async def verify(self, data: UserLogin):
         user = await self.storage.get(conditions={
             'login': data.login
-        })        
+        })
         return DataHasher().verify(secret_word=UserLogin.password, hashed_word=user.password)
+
+    async def is_super_user(self, login):
+        status = await self.storage.exists(conditions={
+            'login': login,
+            'is_superuser': True
+        })
+        return status
 
 
 @lru_cache()

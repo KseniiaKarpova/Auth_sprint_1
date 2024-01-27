@@ -2,6 +2,20 @@
 1. [Auth_sprint_1.drawio](https://drive.google.com/file/d/12AntGAq1lJSE7KKA0LuQ6QxiADTEspA7/view?usp=sharing)
 2. [Требования. Auth_sprint_1](https://docs.google.com/spreadsheets/d/1hftmI8ORoq7WAGe7anUckMFR7Ojjj0UHMK_bcbC1TpM/edit?usp=sharing)
 
+# Запуск проекта:
+```commandline
+cp env_example .env
+
+docker-compose up -d --build
+
+docker exec AuthAPI alembic upgrade head 
+```
+
+
+
+
+
+
 
 
 # Проектная работа 6 спринта
