@@ -1,10 +1,11 @@
-from fastapi import APIRouter, Depends, Query, status
 from async_fastapi_jwt_auth import AuthJWT
-from exceptions import crud_not_found, role_already_exist_error, role_not_found, forbidden_error
-from models.models import Role
-from services.crud import CrudService, get_crud_service
-from services.auth import AuthService, get_auth_service
+from fastapi import APIRouter, Depends, Query, status
 
+from exceptions import (crud_not_found, forbidden_error,
+                        role_already_exist_error, role_not_found)
+from models.models import Role
+from services.auth import AuthService, get_auth_service
+from services.crud import CrudService, get_crud_service
 
 router = APIRouter()
 
