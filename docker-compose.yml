@@ -1,41 +1,54 @@
 version: '3.9'
 
 services:
-  test_db:
+  postgres_db:
     image: postgres:15.5-alpine3.19
-    container_name: test_db
+    container_name: postgres_db
     env_file:
       - .env
-    expose:
-      - 5432
+    ports:
+      - "5432:5432"
     volumes:
-      - test_pg_data:/var/lib/postgresql/data
+      - pg_data:/var/lib/postgresql/data
 
-  test_redis:
+  redis:
     image: redis:7.2.3-alpine3.18
-    container_name: tets_redis
+    container_name: redis
     restart: always
     env_file:
       - .env
     volumes:
-      - test_redis_data:/data
+      - redis_data:/data
 
-  test_auth_api:
-    container_name: test_auth_api
-    image:
+  auth_api:
+    container_name: AuthAPI
     command: gunicorn main:app --worker-class uvicorn.workers.UvicornWorker --bind 0.0.0.0:9999
     env_file:
       - .env
+    environment:
+      PYTHONPATH: /src
+    volumes:
+      - ./src:/src
+    build:
+      context: src
+      dockerfile: Dockerfile
+    depends_on:
+      postgres_db:
+        condition: service_started
+      redis:
+        condition: service_started
+    ports:
+      - "9999:9999"
 
-
-  pytest_api:
-    container_name: pytest_api
+  tests:
     build:
       context: tests
-      dockerfile: dockerfile
+      dockerfile: Dockerfile
     env_file:
       - .env
+    entrypoint: >
+      sh -c "pytest functional/src/"
 
 volumes:
-  test_pg_data:
-  test_redis_data:
+  pg_data:
+  redis_data:

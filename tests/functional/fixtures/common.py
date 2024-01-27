@@ -2,7 +2,7 @@ import asyncio
 
 import pytest_asyncio
 from aiohttp import ClientSession
-from ..settings import settings
+from src.core.config import settings
 
 
 @pytest_asyncio.fixture(scope='session')
