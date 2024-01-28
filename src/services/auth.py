@@ -1,5 +1,11 @@
 from functools import lru_cache
+
 from fastapi import Depends
+from sqlalchemy.exc import IntegrityError
+
+from core.hasher import DataHasher
+from exceptions import user_exists
+from schemas.auth import UserLogin
 from services import BaseService
 from storages.user import UserStorage
 from storages.user_history import UserHistoryStorage
@@ -51,6 +57,13 @@ class AuthService(BaseService):
                 "refresh_token": refresh_token,
             })
         return {"access_token": access_token, "refresh_token": refresh_token}
+
+    async def is_super_user(self, login):
+        status = await self.storage.exists(conditions={
+            'login': login,
+            'is_superuser': True
+        })
+        return status
 
 
 @lru_cache()

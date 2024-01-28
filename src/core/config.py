@@ -38,12 +38,11 @@ class HasherSettings(BaseSettings):
     rounds: int = ...
     model_config: str = SettingsConfigDict(env_prefix='hasher_')
 
+
 class APPSettings(BaseSettings):
     project_name: str = 'Auth API'
-
     db: PostgresDbSettings = PostgresDbSettings()
     db_dsn: str = f'postgresql+asyncpg://{db.user}:{db.password}@{db.host}:{db.port}/{db.db}'
-
     redis: RedisSettings = RedisSettings()
     auth: AuthSettings = AuthSettings()
     hasher: HasherSettings = HasherSettings()
