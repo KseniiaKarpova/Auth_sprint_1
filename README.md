@@ -17,6 +17,11 @@ docker exec AuthAPI alembic upgrade head
 
 
 
+# Создание Супер Пользователя:
+```commandline
+ docker exec AuthAPI python cli_create_super_user.py [login] [password]
+```
+
 
 # Проектная работа 6 спринта
 
