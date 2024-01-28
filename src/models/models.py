@@ -25,10 +25,9 @@ class User(Base):
     name: Mapped[str] = mapped_column(nullable=True)
     surname: Mapped[str] = mapped_column(nullable=True)
     is_active: Mapped[bool] = mapped_column(default=True)  # instead deleting user, change this field
-    is_superuser: Mapped[bool] = mapped_column(default=False)
-    user_role: Mapped[List['UserRole']] = relationship(back_populates='user',
-                                                       cascade='all, delete',
-                                                       passive_deletes=True)
+    user_role: Mapped['UserRole'] = relationship(back_populates='user',
+                                                 cascade='all, delete',
+                                                 passive_deletes=True)
     user_history: Mapped[List['UserHistory']] = relationship(back_populates='user',
                                                              cascade='all, delete',
                                                              passive_deletes=True)
