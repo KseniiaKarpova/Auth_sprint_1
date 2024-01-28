@@ -4,6 +4,8 @@ from exceptions import crud_not_found, role_already_exist_error, role_not_found,
 from models.models import Role
 from services.crud import CrudService, get_crud_service
 from services.auth import AuthService, get_auth_service
+from core.handlers import get_current_user
+from schemas.auth import JWTUserData
 
 
 router = APIRouter()
@@ -40,15 +42,13 @@ async def create_role(
     status_code=status.HTTP_200_OK
 )
 async def delete_role(
-    Authorize: AuthJWT = Depends(),
+    current_user: JWTUserData = Depends(get_current_user),
     auth: AuthService = Depends(get_auth_service),
     service: CrudService = Depends(get_crud_service),
     type: str = Query(Role.get_colums()[0], enum=Role.get_colums()),
     value: str | None = None,
 ):
-    await Authorize.jwt_required()
-    current_user = await Authorize.get_jwt_subject()
-    isSuper = await auth.is_super_user(current_user)
+    isSuper = await auth.is_super_user(current_user.login)
     if not isSuper:
         raise forbidden_error
 
@@ -67,15 +67,13 @@ async def delete_role(
     status_code=status.HTTP_200_OK
 )
 async def set_role(
-    Authorize: AuthJWT = Depends(),
+    current_user: JWTUserData = Depends(get_current_user),
     auth: AuthService = Depends(get_auth_service),
     service: CrudService = Depends(get_crud_service),
     old: dict | None = None,
     new: dict | None = None,
 ):
-    await Authorize.jwt_required()
-    current_user = await Authorize.get_jwt_subject()
-    isSuper = await auth.is_super_user(current_user)
+    isSuper = await auth.is_super_user(current_user.login)
     if not isSuper:
         raise forbidden_error
 
@@ -92,13 +90,11 @@ async def set_role(
     summary="",
 )
 async def show_role(
-    Authorize: AuthJWT = Depends(),
+    current_user: JWTUserData = Depends(get_current_user),
     auth: AuthService = Depends(get_auth_service),
     service: CrudService = Depends(get_crud_service),
 ):
-    await Authorize.jwt_required()
-    current_user = await Authorize.get_jwt_subject()
-    isSuper = await auth.is_super_user(current_user)
+    isSuper = await auth.is_super_user(current_user.login)
     if not isSuper:
         raise forbidden_error
 
@@ -114,15 +110,13 @@ async def show_role(
     summary="",
 )
 async def add_role(
-    Authorize: AuthJWT = Depends(),
+    current_user: JWTUserData = Depends(get_current_user),
     auth: AuthService = Depends(get_auth_service),
     service: CrudService = Depends(get_crud_service),
     user_id: str | None = None,
     role_id: str | None = None,
 ):
-    await Authorize.jwt_required()
-    current_user = await Authorize.get_jwt_subject()
-    isSuper = await auth.is_super_user(current_user)
+    isSuper = await auth.is_super_user(current_user.login)
     if not isSuper:
         raise forbidden_error
 
@@ -139,15 +133,13 @@ async def add_role(
     status_code=status.HTTP_200_OK
 )
 async def deprive_role(
-    Authorize: AuthJWT = Depends(),
+    current_user: JWTUserData = Depends(get_current_user),
     auth: AuthService = Depends(get_auth_service),
     service: CrudService = Depends(get_crud_service),
     user_id: str | None = None,
     role_id: str | None = None,
 ):
-    await Authorize.jwt_required()
-    current_user = await Authorize.get_jwt_subject()
-    isSuper = await auth.is_super_user(current_user)
+    isSuper = await auth.is_super_user(current_user.login)
     if not isSuper:
         raise forbidden_error
 
@@ -164,15 +156,13 @@ async def deprive_role(
     summary="",
 )
 async def check_role(
-    Authorize: AuthJWT = Depends(),
+    current_user: JWTUserData = Depends(get_current_user),
     auth: AuthService = Depends(get_auth_service),
     service: CrudService = Depends(get_crud_service),
     user_id: str | None = None,
     role_id: str | None = None,
 ):
-    await Authorize.jwt_required()
-    current_user = await Authorize.get_jwt_subject()
-    isSuper = await auth.is_super_user(current_user)
+    isSuper = await auth.is_super_user(current_user.login)
     if not isSuper:
         raise forbidden_error
 
