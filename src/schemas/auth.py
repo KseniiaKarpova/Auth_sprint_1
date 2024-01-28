@@ -1,6 +1,6 @@
 from datetime import timedelta
-from fastapi import Form
 from pydantic import BaseModel, Field
+from uuid import UUID
 
 from core.config import settings
 
@@ -29,3 +29,8 @@ class AuthSettingsSchema(BaseModel):
 class LoginResponseSchema(BaseModel):
     access_token: str = Field(description='Access token value')
     refresh_token: str = Field(description='Refresh token value')
+
+
+class JWTUserData(BaseModel):
+    login: str
+    uuid: UUID
