@@ -1,10 +1,10 @@
 import uuid
+from typing import List
 
 from sqlalchemy import ForeignKey, MetaData, types
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.ext.asyncio import AsyncAttrs
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
-from typing import List
 
 metadata = MetaData()
 
