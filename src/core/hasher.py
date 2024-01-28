@@ -1,17 +1,18 @@
 from passlib import hash
+
 from core.config import settings
 
 
 class DataHasher:
     def __init__(self) -> None:
         self.algorithm = settings.hasher.algorithm
-        self.rounds = settings.hasher.rounds 
+        self.rounds = settings.hasher.rounds
 
     async def generate_word_hash(self, secret_word: str):
-        hasher = await self.get_hasher()
+        hasher = self.get_hasher()
         return hasher.hash(secret=secret_word)
 
-    async def get_hasher(self):
+    def get_hasher(self):
         if self.algorithm == "sha256_crypt":
             hasher = hash.sha256_crypt
         elif self.algorithm == "pbkdf2_sha256":
@@ -23,5 +24,9 @@ class DataHasher:
         return hasher
 
     async def verify(self, secret_word: str, hashed_word):
-        hasher = await self.get_hasher()
+        hasher = self.get_hasher()
         return hasher.verify(secret_word, hashed_word)
+
+    def sync_generater(self, secret_word: str):
+        hasher = self.get_hasher()
+        return hasher.hash(secret=secret_word)

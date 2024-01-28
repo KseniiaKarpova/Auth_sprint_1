@@ -10,7 +10,7 @@ from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.pool import QueuePool
 
-from api.v1 import auth
+from api.v1 import auth, role, user_history
 from core import config
 from core.logger import LOGGING
 from db import postgres, redis
@@ -52,7 +52,8 @@ def authjwt_exception_handler(request: Request, exc: AuthJWTException):
 
 
 app.include_router(router=auth.router, prefix="/api/v1/auth", tags=["auth"])
-
+app.include_router(router=role.router, prefix="/api/v1/role", tags=["role"])
+app.include_router(router=user_history.router, prefix="/api/v1/user_history", tags=["role"])
 
 if __name__ == '__main__':
     uvicorn.run(
