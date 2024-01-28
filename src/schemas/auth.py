@@ -1,8 +1,8 @@
 from datetime import timedelta
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, validator
 from uuid import UUID
-
 from core.config import settings
+from core.hasher import DataHasher
 
 
 class UserCredentials(BaseModel):
@@ -34,3 +34,14 @@ class LoginResponseSchema(BaseModel):
 class JWTUserData(BaseModel):
     login: str
     uuid: UUID
+
+
+class UserUpdate(BaseModel):
+    password: str = Field(None, description="new login")
+    login: str = Field(None, description="new password")
+
+    @validator("password")
+    def hash_pass(cls, value):
+        if not value:
+            return None
+        return DataHasher().sync_generater(secret_word=value)
