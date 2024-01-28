@@ -5,9 +5,9 @@ from redis.asyncio import Redis
 from db.redis import get_redis
 from schemas.auth import (
     AuthSettingsSchema, LoginResponseSchema,
-    UserCredentials)
+    UserCredentials, UserUpdate, JWTUserData)
 from services.auth import get_auth_service, AuthService
-from core.handlers import user_tokens
+from core.handlers import user_tokens, get_current_user
 
 router = APIRouter()
 
@@ -53,3 +53,11 @@ async def logout(
 @router.post("/registration")
 async def registration(user_credentials: UserCredentials, service: AuthService = Depends(get_auth_service)):
     return await service.registrate(data=user_credentials)
+
+
+@router.patch("/user")
+async def update_user(
+        user_data: UserUpdate = Body(),
+        current_user: JWTUserData = Depends(get_current_user),
+        service: AuthService = Depends(get_auth_service)):
+    return await service.update_user(data=user_data, user_id=current_user.uuid)

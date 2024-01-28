@@ -40,6 +40,7 @@ async def check_user(
     user = await storage.get(conditions={
             'login': user_credentials.login
         })
+
     if not user:
         raise incorrect_credentials
     is_valid = await DataHasher().verify(secret_word=user_credentials.password, hashed_word=user.password)
