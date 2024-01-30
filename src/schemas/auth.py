@@ -28,7 +28,7 @@ class AuthSettingsSchema(BaseModel):
 
 class LoginResponseSchema(BaseModel):
     access_token: str = Field(description='Access token value')
-    refresh_token: str = Field(description='Refresh token value')
+    refresh_token: str | None = Field(None, description='Refresh token value')
 
 
 class JWTUserData(BaseModel):

@@ -22,8 +22,6 @@ class CrudService(AbstractCrudService):
                 'name': name
             })
             return res
-        except IntegrityError:
-            raise role_already_exist_error
         except Exception:
             raise server_error
 
@@ -34,8 +32,6 @@ class CrudService(AbstractCrudService):
                 type: val
             })
             return res['rowcount']
-        except IntegrityError:
-            raise role_already_exist_error
         except Exception:
             raise server_error
 
@@ -44,8 +40,6 @@ class CrudService(AbstractCrudService):
         try:
             res = await self.storage_role.update(old_data, new_data)
             return res['rowcount']
-        except IntegrityError:
-            raise role_not_found
         except Exception:
             raise server_error
 
@@ -54,8 +48,6 @@ class CrudService(AbstractCrudService):
         try:
             res = await self.storage_role.get_many({})
             return res
-        except IntegrityError:
-            raise role_not_found
         except Exception:
             raise server_error
 
@@ -67,8 +59,6 @@ class CrudService(AbstractCrudService):
                 'role_id': role_id
             })
             return res
-        except IntegrityError:
-            raise crud_not_found
         except Exception:
             raise server_error
 
@@ -80,8 +70,6 @@ class CrudService(AbstractCrudService):
                 'role_id': role_id
             })
             return res['rowcount']
-        except IntegrityError:
-            raise role_already_exist_error
         except Exception:
             raise server_error
 
@@ -93,8 +81,6 @@ class CrudService(AbstractCrudService):
                 'role_id': role_id
             })
             return res
-        except IntegrityError:
-            raise role_not_found
         except Exception:
             raise server_error
 
