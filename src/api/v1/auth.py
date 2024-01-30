@@ -12,6 +12,7 @@ from schemas.auth import (
 from services.auth import get_auth_service, AuthService
 from core.handlers import get_jwt_handler, JwtHandler
 
+
 router = APIRouter()
 
 
@@ -69,5 +70,4 @@ async def update_user(
         jwt_handler: JwtHandler = Depends(get_jwt_handler),
         service: AuthService = Depends(get_auth_service)):
     current_user = await jwt_handler.get_current_user()
-    print(user_data)
     return await service.update_user(data=user_data, user_id=current_user.uuid)

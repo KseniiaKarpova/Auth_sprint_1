@@ -93,7 +93,6 @@ class AlchemyBaseStorage(ABC):
             setattr(self, 'query', await self.generate_query(attributes=attributes, conditions=conditions))
             await self.order()
             query: Query = getattr(self, 'query', None)
-            print(query)
             instance = (await self.session.execute(query)).scalars().all()
         return instance
 
