@@ -16,10 +16,7 @@ docker exec AuthAPI alembic upgrade head
 ```bash
  docker exec AuthAPI python cli_create_super_user.py [login] [password]
 ```
-# Test
-```bash
-docker-compose -f docker-compose-tests.yml up --build
-```
+
 
 # Проектная работа 6 спринта
 

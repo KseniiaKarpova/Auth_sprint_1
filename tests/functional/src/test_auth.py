@@ -1,6 +1,5 @@
-import random as rd
-import uuid
 import pytest
+
 
 @pytest.mark.parametrize(
     'in_data, out_data',

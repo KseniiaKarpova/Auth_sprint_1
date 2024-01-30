@@ -30,7 +30,7 @@ def make_get_request(aiohttp_session: ClientSession):
 
 
 @pytest_asyncio.fixture(name='make_post_request')
-def make_get_request(aiohttp_session: ClientSession):
+def make_post_request(aiohttp_session: ClientSession):
     async def inner(endpoint, json=None):
         url = f"{test_settings.service_url}{endpoint}"
         async with aiohttp_session.post(url, json=json) as response:
