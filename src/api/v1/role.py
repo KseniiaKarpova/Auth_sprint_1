@@ -1,36 +1,27 @@
-from async_fastapi_jwt_auth import AuthJWT
 from fastapi import APIRouter, Depends, Query, status
 
-from exceptions import (crud_not_found, forbidden_error,
-                        role_already_exist_error, role_not_found)
+from exceptions import (
+    crud_not_found,
+    role_already_exist_error,
+    role_not_found)
 from models.models import Role
-from services.auth import AuthService, get_auth_service
 from services.crud import CrudService, get_crud_service
-from core.handlers import get_current_user
-from schemas.auth import JWTUserData
+from core.handlers import JwtHandler, get_jwt_handler
 
 
 router = APIRouter()
 
 
-@router.patch(
+@router.post(
     "/",
     response_description="Create role",
     summary="",
     status_code=status.HTTP_201_CREATED,
 )
 async def create_role(
-    Authorize: AuthJWT = Depends(),
-    auth: AuthService = Depends(get_auth_service),
     service: CrudService = Depends(get_crud_service),
     name: str | None = None,
 ):
-    await Authorize.jwt_required()
-    current_user = await Authorize.get_jwt_subject()
-    isSuper = await auth.is_super_user(current_user)
-    if not isSuper:
-        raise forbidden_error
-
     result = await service.create_role(name)
     if result is None:
         raise role_already_exist_error
@@ -44,15 +35,12 @@ async def create_role(
     status_code=status.HTTP_200_OK
 )
 async def delete_role(
-    current_user: JWTUserData = Depends(get_current_user),
-    auth: AuthService = Depends(get_auth_service),
+    jwt_handler: JwtHandler = Depends(get_jwt_handler),
     service: CrudService = Depends(get_crud_service),
     type: str = Query(Role.get_colums()[0], enum=Role.get_colums()),
     value: str | None = None,
 ):
-    isSuper = await auth.is_super_user(current_user.login)
-    if not isSuper:
-        raise forbidden_error
+    await jwt_handler.is_super_user()
 
     result = await service.delete_role(type, value)
     if not result:
@@ -61,7 +49,7 @@ async def delete_role(
         return 'Changes have been applied'
 
 
-@router.post(
+@router.patch(
     "/",
     response_description="",
     summary="",
@@ -69,15 +57,12 @@ async def delete_role(
     status_code=status.HTTP_200_OK
 )
 async def set_role(
-    current_user: JWTUserData = Depends(get_current_user),
-    auth: AuthService = Depends(get_auth_service),
+    jwt_handler: JwtHandler = Depends(get_jwt_handler),
     service: CrudService = Depends(get_crud_service),
     old: dict | None = None,
     new: dict | None = None,
 ):
-    isSuper = await auth.is_super_user(current_user.login)
-    if not isSuper:
-        raise forbidden_error
+    await jwt_handler.is_super_user()
 
     result = await service.set_role(old, new)
     if not result:
@@ -92,13 +77,10 @@ async def set_role(
     summary="",
 )
 async def show_role(
-    current_user: JWTUserData = Depends(get_current_user),
-    auth: AuthService = Depends(get_auth_service),
+    jwt_handler: JwtHandler = Depends(get_jwt_handler),
     service: CrudService = Depends(get_crud_service),
 ):
-    isSuper = await auth.is_super_user(current_user.login)
-    if not isSuper:
-        raise forbidden_error
+    await jwt_handler.is_super_user()
 
     result = await service.show_all_role()
     if result is None:
@@ -106,21 +88,18 @@ async def show_role(
     return result
 
 
-@router.patch(
+@router.post(
     "/user/",
     response_description="Назначить пользователю роль",
     summary="",
 )
 async def add_role(
-    current_user: JWTUserData = Depends(get_current_user),
-    auth: AuthService = Depends(get_auth_service),
+    jwt_handler: JwtHandler = Depends(get_jwt_handler),
     service: CrudService = Depends(get_crud_service),
     user_id: str | None = None,
     role_id: str | None = None,
 ):
-    isSuper = await auth.is_super_user(current_user.login)
-    if not isSuper:
-        raise forbidden_error
+    await jwt_handler.is_super_user()
 
     result = await service.add_role(user_id, role_id)
     if result is None:
@@ -135,15 +114,12 @@ async def add_role(
     status_code=status.HTTP_200_OK
 )
 async def deprive_role(
-    current_user: JWTUserData = Depends(get_current_user),
-    auth: AuthService = Depends(get_auth_service),
+    jwt_handler: JwtHandler = Depends(get_jwt_handler),
     service: CrudService = Depends(get_crud_service),
     user_id: str | None = None,
     role_id: str | None = None,
 ):
-    isSuper = await auth.is_super_user(current_user.login)
-    if not isSuper:
-        raise forbidden_error
+    await jwt_handler.is_super_user()
 
     result = await service.deprive_role(user_id, role_id)
     if not result:
@@ -158,15 +134,12 @@ async def deprive_role(
     summary="",
 )
 async def check_role(
-    current_user: JWTUserData = Depends(get_current_user),
-    auth: AuthService = Depends(get_auth_service),
+    jwt_handler: JwtHandler = Depends(get_jwt_handler),
     service: CrudService = Depends(get_crud_service),
     user_id: str | None = None,
     role_id: str | None = None,
 ):
-    isSuper = await auth.is_super_user(current_user.login)
-    if not isSuper:
-        raise forbidden_error
+    await jwt_handler.is_super_user()
 
     result = await service.check_role(user_id, role_id)
     return result

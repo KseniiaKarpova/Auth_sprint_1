@@ -4,10 +4,13 @@ from redis.asyncio import Redis
 
 from db.redis import get_redis
 from schemas.auth import (
-    AuthSettingsSchema, LoginResponseSchema,
-    UserCredentials, UserUpdate, JWTUserData)
+    AuthSettingsSchema,
+    LoginResponseSchema,
+    UserCredentials,
+    UserUpdate,
+    UserLogin)
 from services.auth import get_auth_service, AuthService
-from core.handlers import user_tokens, get_current_user
+from core.handlers import get_jwt_handler, JwtHandler
 
 router = APIRouter()
 
@@ -26,16 +29,19 @@ async def check_if_token_in_denylist(decrypted_token):
 
 
 @router.post("/login", response_model=LoginResponseSchema)
-async def login(tokens=Depends(user_tokens)):
-    return tokens
+async def login(
+        jwt_handler: JwtHandler = Depends(get_jwt_handler),
+        credentials: UserLogin = Body()):
+    return await jwt_handler.user_tokens(credentials=credentials)
 
 
-@router.post("/refresh")
-async def refresh(Authorize: AuthJWT = Depends()):
-    await Authorize.jwt_refresh_token_required()
-    current_user = await Authorize.get_jwt_subject()
-    new_access_token = await Authorize.create_access_token(subject=current_user)
-    return {"access_token": new_access_token}
+@router.post(
+    "/refresh",
+    response_model=LoginResponseSchema,
+    response_model_exclude_none=True)
+async def refresh(
+        jwt_handler: JwtHandler = Depends(get_jwt_handler),):
+    return await jwt_handler.refresh_access_token()
 
 
 @router.post("/logout")
@@ -51,13 +57,17 @@ async def logout(
 
 
 @router.post("/registration")
-async def registration(user_credentials: UserCredentials, service: AuthService = Depends(get_auth_service)):
+async def registration(
+        user_credentials: UserCredentials,
+        service: AuthService = Depends(get_auth_service)):
     return await service.registrate(data=user_credentials)
 
 
 @router.patch("/user")
 async def update_user(
         user_data: UserUpdate = Body(),
-        current_user: JWTUserData = Depends(get_current_user),
+        jwt_handler: JwtHandler = Depends(get_jwt_handler),
         service: AuthService = Depends(get_auth_service)):
+    current_user = await jwt_handler.get_current_user()
+    print(user_data)
     return await service.update_user(data=user_data, user_id=current_user.uuid)
