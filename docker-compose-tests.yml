@@ -23,6 +23,14 @@ services:
     command: gunicorn main:app --worker-class uvicorn.workers.UvicornWorker --bind 0.0.0.0:9999
     env_file:
       - .env
+    environment:
+      POSTGRES_HOST: ${TEST_POSTGRES_HOST}
+      POSTGRES_PASSWORD: ${TEST_POSTGRES_PASSWORD}
+      POSTGRES_USER: ${TEST_POSTGRES_USER}
+      POSTGRES_DB: ${TEST_POSTGRES_DB}
+      POSTGRES_PORT: ${TEST_POSTGRES_PORT}
+      REDIS_HOST: ${TEST_REDIS_HOST}
+      REDIS_PORT: ${TEST_REDIS_PORT}
     volumes:
       - ./src:/src
     build:
@@ -43,14 +51,6 @@ services:
     image: async_tests
     env_file:
       - .env
-    environment:
-      POSTGRES_HOST: ${TEST_POSTGRES_HOST}
-      POSTGRES_PASSWORD: ${TEST_POSTGRES_PASSWORD}
-      POSTGRES_USER: ${TEST_POSTGRES_USER}
-      POSTGRES_DB: ${TEST_POSTGRES_DB}
-      POSTGRES_PORT: ${TEST_POSTGRES_PORT}
-      REDIS_HOST: ${TEST_REDIS_HOST}
-      REDIS_PORT: ${TEST_REDIS_PORT}
     entrypoint: >
       sh -c "
       pytest functional/src/"
